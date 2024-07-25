@@ -13,10 +13,22 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
+        <div class="flex-col items-center flex gap-y-6">
+            <div class="my-auto">
+                <img id="avatarPreview" class=" w-[300px] h-[300px] object-cover rounded-full border-8 border-blue-500" src="{{ Storage::url(Auth::user()->avatar) }}" />
+            </div>
+            <div class="flex-col items-center flex gap-y-2">
+                <button type="button" class="ml-4 px-4 py-2 bg-blue-500 text-white rounded" onclick="document.getElementById('avatar').click();">{{ __('Change Avatar') }}</button>
+                <input id="avatar" type="file" name="avatar" class="hidden" accept="image/*" onchange="previewImage(event)" />
+                <p class="w-[300pt] text-center mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    We suggest you to upload your photo with ratio 1:1.
+                Please make sure the size must less under 1 MB.</p>
+            </div>
+        </div>   
         <div>
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
@@ -62,3 +74,17 @@
         </div>
     </form>
 </section>
+
+
+<script>
+    function previewImage(event) {
+        var input = event.target;
+        var reader = new FileReader();
+        reader.onload = function() {
+            var dataURL = reader.result;
+            var output = document.getElementById('avatarPreview');
+            output.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+</script>

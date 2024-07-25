@@ -6,7 +6,7 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                        <img src="{{asset('images/punggawa.png')}}" alt="App Logo" class="block h-9 w-auto" />
                     </a>
                 </div>
 
@@ -15,15 +15,56 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    @role('owner')
+                    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
+                        {{ __('Categories') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.donaturs.index')" :active="request()->routeIs('admin.donaturs.index')">
+                        {{ __('Donators') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('admin.fundraising_withdrawals.index')" :active="request()->routeIs('admin.fundraising_withdrawals.index')">
+                        {{ __('Withdrawals') }}
+                    </x-nav-link>
+                    @endrole
+
+                    @role('owner|fundraiser')
+                    <x-nav-link :href="route('admin.fundraisings.index')" :active="request()->routeIs('admin.fundraisings.index')">
+                        {{ __('Fundraisings') }}
+                    </x-nav-link>
+                    @endrole
+
+                    <x-nav-link :href="route('admin.fundraisers.index')" :active="request()->routeIs('admin.fundraisers.index')">
+                        {{ __('Fundraisers') }}
+                    </x-nav-link>
+
+                    @role('fundraiser')
+                    <x-nav-link :href="route('admin.my-withdrawals')" :active="request()->routeIs('admin.my-withdrawals')">
+                        {{ __('My Withdrawals') }}
+                    </x-nav-link>
+                    @endrole
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden sm:flex sm:items-center sm:ms-6 gap-3">
+                <!-- <button id="theme-toggle" type="button"
+                    class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                            fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                </button> -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-bold rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-blue-500 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
+                            <div class="flex flexr-row items-center gap-x-5" ><img class="w-[30px] h-[30px] object-cover rounded-full" src="{{Storage::url(Auth::user()->avatar)}}"/> {{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -34,17 +75,33 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                    <x-dropdown-link :href="route('profile.edit')" class="py-2 px-4 flex items-center hover:text-blue-500" onmouseover="changeIconColor(this, '#3B82F6')" onmouseout="changeIconColor(this, '#000000')">
+                        <lord-icon
+                            src="https://cdn.lordicon.com/kthelypq.json"
+                            trigger="hover"
+                            colors="primary:#000000"
+                            style="width:24px;height:24px; margin-right:8px;"
+                            id="profile-icon"
+                            target= "a">
+                        </lord-icon>
+                        {{ __('Profile') }}
+                    </x-dropdown-link>
 
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
 
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link :href="route('logout')" class="py-2 px-4 flex items-center hover:text-blue-500" onmouseover="changeIconColor(this, '#3B82F6')" onmouseout="changeIconColor(this, '#000000')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
+                                <lord-icon
+                                    src="https://cdn.lordicon.com/vduvxizq.json"
+                                    trigger="hover"
+                                    colors="primary:#000000"
+                                    style="width:24px;height:24px; margin-right:8px;"
+                                    id="profile-icon"
+                                    target="a">
+                                </lord-icon>
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
@@ -98,3 +155,12 @@
         </div>
     </div>
 </nav>
+
+<script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+<script>
+    function changeIconColor(element, color) {
+        const icon = element.querySelector('lord-icon');
+        icon.setAttribute('colors', `primary:${color}`);
+    }
+</script>
