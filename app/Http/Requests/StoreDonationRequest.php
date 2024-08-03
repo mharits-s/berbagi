@@ -23,9 +23,9 @@ class StoreDonationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'amount' => ['required', 'numeric', 'min:15000'],
             'phone_number' => ['required', 'string'],
-            'notes' => ['required', 'string', 'max:65535'],
-            'proof' => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            'notes' => ['sometimes', 'string', 'max:65535'],
         ];
     }
 }

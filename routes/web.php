@@ -22,11 +22,14 @@ Route::get('/details/{fundraising:slug}', [FrontController::class, 'details'])
 Route::get('/support/{fundraising:slug}', [FrontController::class, 'support'])
 ->name('front.support');
 
-Route::get('/checkout/{fundraising:slug}/{totalAmountDonation}', [FrontController::class, 'checkout'])
+Route::get('/checkout/{fundraising:slug}', [FrontController::class, 'checkout'])
 ->name('front.checkout');
 
-Route::post('/checkout/store/{fundraising:slug}/{totalAmountDonation}', [FrontController::class, 'store'])
-->name('front.store');
+Route::post('/midtrans-callback', [FrontController::class, 'callback']);
+
+Route::get('/invoice/{donatur:id}', [FrontController::class, 'invoice'])
+->name('front.invoice');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
